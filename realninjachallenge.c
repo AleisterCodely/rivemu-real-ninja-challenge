@@ -171,7 +171,8 @@ void draw_game() {
     riv_draw_text(buf, RIV_SPRITESHEET_FONT_3X5, RIV_BOTTOMRIGHT, 254, riv->height - 4, 1, RIV_COLOR_WHITE);
 
     if (current_fruit) {
-        riv_snprintf(buf, sizeof(buf), "CURRENT FRUIT: %s", get_fruit_type_name(current_fruit->type));
+        char *fruit_name = get_fruit_type_name(current_fruit->type);
+        riv_snprintf(buf, sizeof(buf), "CURRENT FRUIT: %s", fruit_name);
         riv_draw_text(buf, RIV_SPRITESHEET_FONT_3X5, RIV_CENTER, 128, 10, 1, RIV_COLOR_WHITE);
         riv_snprintf(buf, sizeof(buf), "SLASHES LEFT: %d", current_fruit->directions_count - current_fruit->current_direction);
         riv_draw_text(buf, RIV_SPRITESHEET_FONT_3X5, RIV_CENTER, 128, 20, 1, RIV_COLOR_WHITE);
