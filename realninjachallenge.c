@@ -15,9 +15,7 @@ int countdown_timer = GAME_TIME * MAX_FPS;
 int time_remaining;
 int score;
 
-bool started = false;
-bool ended = false;
-bool fruit_present = false;
+bool started, ended, fruit_present = false;
 
 void start_game() {
     started = true;
