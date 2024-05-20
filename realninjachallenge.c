@@ -43,7 +43,7 @@ typedef struct {
 // Sound fx
 riv_waveform_desc slash_fx = {
     .type = RIV_WAVEFORM_NOISE,
-    .attack = 0.000,
+    .attack = 0.050,
     .decay = 0.150,
     .sustain = 0.100,
     .release = 0.075,
@@ -97,12 +97,15 @@ bool down_pressed = false;
 bool left_pressed = false;
 bool right_pressed = false;
 int fruit_image_id = 0;
+int slash_image_id = 0;
 int misses = 0;
 int peaches_slashed = 0;
 int apples_slashed = 0;
 int grapes_slashed = 0;
 int bananas_slashed = 0;
 int total_slashed = 0;
+int slash_animation_frames = 0;
+char slash_image_path[50] = "";
 
 void start_game() {
     started = true;
@@ -164,8 +167,26 @@ void spawn_fruit() {
 }
 
 void slash_fruit(Direction direction) {
+    riv_destroy_image(slash_image_id);
     if (current_fruit->directions[current_fruit->current_direction] == direction) {
         riv_waveform(&slash_fx);
+            slash_animation_frames = 5;
+            switch(direction) {
+                case DIRECTION_UP:
+                    snprintf(slash_image_path, sizeof(slash_image_path), "slash_up.png");
+                    break;
+                case DIRECTION_DOWN:
+                    snprintf(slash_image_path, sizeof(slash_image_path), "slash_down.png");
+                    break;
+                case DIRECTION_LEFT:
+                    snprintf(slash_image_path, sizeof(slash_image_path), "slash_left.png");
+                    break;
+                case DIRECTION_RIGHT:
+                    snprintf(slash_image_path, sizeof(slash_image_path), "slash_right.png");
+                    break;
+                default:
+                    break;
+            }
         current_fruit->current_direction++;
         if (current_fruit->current_direction == current_fruit->directions_count) {
             // Add score, more time and more slashes, destroy image, outcard stuff
@@ -252,7 +273,6 @@ void draw_game() {
     riv_draw_text(buf, RIV_SPRITESHEET_FONT_3X5, RIV_BOTTOMLEFT, 1, riv->height - 4, 1, final_seconds);
     riv_snprintf(buf, sizeof(buf), "SCORE: %d", score);
     riv_draw_text(buf, RIV_SPRITESHEET_FONT_3X5, RIV_BOTTOMRIGHT, 254, riv->height - 4, 1, RIV_COLOR_WHITE);
-
     if (current_fruit) {
         char *fruit_name = get_fruit_type_name(current_fruit->type);
         riv_snprintf(buf, sizeof(buf), "CURRENT FRUIT: %s", fruit_name);
@@ -265,6 +285,13 @@ void draw_game() {
         riv_draw_text(buf, RIV_SPRITESHEET_FONT_3X5, RIV_CENTER, 128, 20, 1, RIV_COLOR_WHITE);
         riv_snprintf(buf, sizeof(buf), "CURRENT DIRECTION: %s", get_direction_name(current_fruit->directions[current_fruit->current_direction]));
         riv_draw_text(buf, RIV_SPRITESHEET_FONT_3X5, RIV_BOTTOM, riv->width / 2, riv->height - 20, 1, RIV_COLOR_WHITE);
+    }
+    if (slash_animation_frames > 0) {
+        slash_image_id = riv_make_image(slash_image_path, RIV_COLOR_BLACK);
+        riv_draw_image_rect(slash_image_id, 112, 112, 32, 32, 0, 0, 1, 1);
+        slash_animation_frames--;
+    } else {
+        riv_destroy_image(slash_image_id);
     }
 }
 
