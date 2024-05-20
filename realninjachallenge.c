@@ -1,5 +1,6 @@
 #include <riv.h>
 #include <math.h>
+#include <stdlib.h>
 
 enum {
   SCREEN_SIZE = 256,
@@ -9,13 +10,32 @@ enum {
   GAME_TIME = 30,
 };
 
+enum {
+    DIRECTION_UP,
+    DIRECTION_DOWN,
+    DIRECTION_LEFT,
+    DIRECTION_RIGHT,
+} Direction;
+
+enum {
+    PEACH,
+    APPLE,
+    GRAPES,
+    BANANAS
+} FruitType;
+
+struct {
+    FruitType type;
+    Direction* directions;
+    int directions_count;
+    int current_direction;
+} Fruit;
 
 // How do I fps math?
 int countdown_timer = GAME_TIME * MAX_FPS;
-int time_remaining;
-int score;
-
-bool started, ended, fruit_present = false;
+int time_remaining, score;
+bool started, ended, fruit_present, up_pressed, down_pressed, left_pressed, right_pressed = false;
+Fruit* current_fruit = NULL;
 
 void start_game() {
     started = true;
@@ -38,8 +58,29 @@ void update_game() {
     if(!fruit_present){
         spawn_fruit();
     } else {
-        if(riv->keys[RIV_GAMEPAD_UP].down){
-            slash_fruit();
+        if(riv->keys[RIV_GAMEPAD_UP].down && !up_pressed){
+            slash_fruit(DIRECTION_UP);
+            up_pressed = true;
+        } else if (!riv->keys[RIV_GAMEPAD_UP].down) {
+            up_pressed = false;
+        }
+        if(riv->keys[RIV_GAMEPAD_DOWN].down && !down_pressed){
+            slash_fruit(DIRECTION_DOWN);
+            down_pressed = true;
+        } else if (!riv->keys[RIV_GAMEPAD_DOWN].down) {
+            down_pressed = false;
+        }
+        if(riv->keys[RIV_GAMEPAD_LEFT].down && !left_pressed){
+            slash_fruit(DIRECTION_LEFT);
+            left_pressed = true;
+        } else if (!riv->keys[RIV_GAMEPAD_LEFT].down) {
+            left_pressed = false;
+        }
+        if(riv->keys[RIV_GAMEPAD_RIGHT].down && !right_pressed){
+            slash_fruit(DIRECTION_RIGHT);
+            right_pressed = true;
+        } else if (!riv->keys[RIV_GAMEPAD_RIGHT].down) {
+            right_pressed = false;
         }
     }
 }
@@ -89,12 +130,33 @@ void draw_end_screen() {
 }
 
 void spawn_fruit() {
+    current_fruit = (Fruit*)malloc(sizeof(Fruit));
+    current_fruit->type = rand() % 4;
+    current_fruit->directions_count = 2 + rand() % 3;
+    current_fruit->directions = (Direction*)malloc(current_fruit->directions_count * sizeof(Direction));
+    for (int i = 0; i < current_fruit->directions_count; i++) {
+        current_fruit->directions[i] = rand() % 4; // Random direction
+    }
+    current_fruit->current_direction = 0;
     riv_printf("Spawning fruit\n");
     fruit_present = true;
 }
 
-void slash_fruit() {
-    riv_printf("Slashed fruit\n");
+void slash_fruit(Direction dir) {
+    switch(dir) {
+        case DIRECTION_UP:
+            riv_printf("Slashed fruit upwards!\n");
+            break;
+        case DIRECTION_DOWN:
+            riv_printf("Slashed fruit downwards!\n");
+            break;
+        case DIRECTION_LEFT:
+            riv_printf("Slashed fruit leftways!\n");
+            break;
+        case DIRECTION_RIGHT:
+            riv_printf("Slashed fruit rightways!\n");
+            break;
+    }
     fruit_present = false;
     score += 100;
 }
