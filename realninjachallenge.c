@@ -181,23 +181,8 @@ void draw_game() {
 }
 
 void draw_start_screen() {
-    riv_draw_text(
-        "REAL NINJA",
-        RIV_SPRITESHEET_FONT_5X7,
-        RIV_CENTER,
-        128,
-        15,
-        4,
-        RIV_COLOR_ORANGE
-    );
-    riv_draw_text("CHALLENGE!",
-        RIV_SPRITESHEET_FONT_5X7,
-        RIV_CENTER,
-        128,
-        50,
-        4,
-        RIV_COLOR_ORANGE
-    );
+    int splash_screen = riv_make_image("sprites/splash.png", RIV_COLOR_BLACK);
+    riv_draw_image_rect(splash_screen, 0, 10, 256, 256, 0, 0, 1, 1);
     uint32_t flash_start = (riv->frame % 60 < 30) ? RIV_COLOR_WHITE : RIV_COLOR_BLACK;
     riv_draw_text("PRESS START!",
         RIV_SPRITESHEET_FONT_5X7,
