@@ -263,7 +263,7 @@ void update_game() {
 }
 
 void update_score() {
-    riv->outcard_len = riv_snprintf((char*)riv->outcard, RIV_SIZE_OUTCARD, "JSON{\"score\":%d,\"peaches\":%d,\"apples\":%d,\"grapes\":%d,\"bananas\":%d,\"misses\":%d}", score, peaches_slashed, apples_slashed, grapes_slashed, bananas_slashed, misses);
+    riv->outcard_len = riv_snprintf((char*)riv->outcard, RIV_SIZE_OUTCARD, "JSON{\"score\":%d,\"peaches destroyed\":%d,\"apples sliced\":%d,\"grapes obliterated\":%d,\"bananas unbunched\":%d,\"misses\":%d}", score, peaches_slashed, apples_slashed, grapes_slashed, bananas_slashed, misses);
 }
 
 void draw_game() {
@@ -293,6 +293,7 @@ void draw_game() {
     } else {
         riv_destroy_image(slash_image_id);
     }
+    riv_destroy_image(fruit_image_id);
 }
 
 void draw_start_screen() {
