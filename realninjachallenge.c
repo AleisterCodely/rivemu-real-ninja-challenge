@@ -346,6 +346,7 @@ void draw_start_screen() {
         2,
         flash_start
     );
+    riv_destroy_image(splash_screen);
 }
 
 void draw_end_screen() {
