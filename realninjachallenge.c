@@ -98,6 +98,7 @@ bool left_pressed = false;
 bool right_pressed = false;
 int fruit_image_id = 0;
 int slash_image_id = 0;
+int miss_image_id = 0;
 int misses = 0;
 int peaches_slashed = 0;
 int apples_slashed = 0;
@@ -105,6 +106,7 @@ int grapes_slashed = 0;
 int bananas_slashed = 0;
 int total_slashed = 0;
 int slash_animation_frames = 0;
+int miss_animation_frames = 0;
 char slash_image_path[50] = "";
 
 void start_game() {
@@ -217,6 +219,7 @@ void slash_fruit(Direction direction) {
         countdown_timer -= MAX_FPS;
         score -= 25;
         misses += 1;
+        miss_animation_frames = 5;
     }
 }
 
@@ -292,6 +295,13 @@ void draw_game() {
         slash_animation_frames--;
     } else {
         riv_destroy_image(slash_image_id);
+    }
+    if (miss_animation_frames > 0) {
+        miss_image_id = riv_make_image("miss.png", RIV_COLOR_BLACK);
+        riv_draw_image_rect(miss_image_id, 99, 112, 16, 16, 0, 0, 1, 1);
+        miss_animation_frames--;
+    } else {
+        riv_destroy_image(miss_image_id);
     }
     riv_destroy_image(fruit_image_id);
 }
