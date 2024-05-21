@@ -99,6 +99,7 @@ bool right_pressed = false;
 int fruit_image_id = 0;
 int slash_image_id = 0;
 int miss_image_id = 0;
+int arrow_image_id = 0;
 int misses = 0;
 int peaches_slashed = 0;
 int apples_slashed = 0;
@@ -200,6 +201,7 @@ void slash_fruit(Direction direction) {
                 max_slashes += 1;
             }
             riv_destroy_image(fruit_image_id);
+            riv_destroy_image(arrow_image_id);
             if(current_fruit->type==PEACH){
                 peaches_slashed += 1;
             } else if(current_fruit->type==APPLE){
@@ -220,6 +222,9 @@ void slash_fruit(Direction direction) {
         score -= 25;
         misses += 1;
         miss_animation_frames = 5;
+        // ALWAYS get harder on miss to punish slow players
+        min_slashes += 1;
+        max_slashes += 1;
     }
 }
 
@@ -288,6 +293,28 @@ void draw_game() {
         riv_draw_text(buf, RIV_SPRITESHEET_FONT_3X5, RIV_CENTER, 128, 20, 1, RIV_COLOR_WHITE);
         riv_snprintf(buf, sizeof(buf), "CURRENT DIRECTION: %s", get_direction_name(current_fruit->directions[current_fruit->current_direction]));
         riv_draw_text(buf, RIV_SPRITESHEET_FONT_3X5, RIV_BOTTOM, riv->width / 2, riv->height - 20, 1, RIV_COLOR_WHITE);
+        const char* arrow_image_path = "";
+        switch (current_fruit->directions[current_fruit->current_direction]) {
+            case DIRECTION_UP:
+                arrow_image_path = "arrow_up.png";
+                break;
+            case DIRECTION_DOWN:
+                arrow_image_path = "arrow_down.png";
+                break;
+            case DIRECTION_LEFT:
+                arrow_image_path = "arrow_left.png";
+                break;
+            case DIRECTION_RIGHT:
+                arrow_image_path = "arrow_right.png";
+                break;
+            default:
+                break;
+        }
+        if (arrow_image_path[0] != '\0') {
+            arrow_image_id = riv_make_image(arrow_image_path, RIV_COLOR_BLACK);
+            riv_draw_image_rect(arrow_image_id, 112, 150, 32, 32, 0, 0, 1, 1);
+            riv_destroy_image(arrow_image_id);
+        }
     }
     if (slash_animation_frames > 0) {
         slash_image_id = riv_make_image(slash_image_path, RIV_COLOR_BLACK);
@@ -304,6 +331,7 @@ void draw_game() {
         riv_destroy_image(miss_image_id);
     }
     riv_destroy_image(fruit_image_id);
+    riv_destroy_image(arrow_image_id);
 }
 
 void draw_start_screen() {
