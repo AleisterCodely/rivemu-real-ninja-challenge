@@ -117,7 +117,7 @@ void start_game() {
 
 void end_game() {
     ended = true;
-    riv->quit_frame = riv->frame + 3 * riv->target_fps;
+    riv->quit_frame = riv->frame + 5 * riv->target_fps;
 }
 
 const char* get_fruit_type_name(FruitType type) {
@@ -349,10 +349,46 @@ void draw_start_screen() {
 }
 
 void draw_end_screen() {
-    draw_game();
     riv_clear(RIV_COLOR_BLUE);
+    char buf[128];
     uint32_t flash_end = (riv->frame % 60 < 30) ? RIV_COLOR_RED : RIV_COLOR_BLACK;
-    riv_draw_text("GAME OVER", RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 128, 128, 4, flash_end);
+    riv_draw_text("GAME OVER", RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 128, 235, 4, flash_end);
+    
+    // Draw fruit kills
+    int peach_score = riv_make_image("PEACH.png", RIV_COLOR_BLACK);
+    riv_draw_image_rect(peach_score, 90, 10, 32, 32, 0, 0, 1, 1);
+    riv_draw_text("X", RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 130, 30, 1, RIV_COLOR_WHITE);
+    riv_snprintf(buf, sizeof(buf), "%d", peaches_slashed);
+    riv_draw_text(buf, RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 150, 30, 1, RIV_COLOR_WHITE);
+    int apple_score = riv_make_image("APPLE.png", RIV_COLOR_BLACK);
+    riv_draw_image_rect(apple_score, 90, 50, 32, 32, 0, 0, 1, 1);
+    riv_draw_text("X", RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 130, 65, 1, RIV_COLOR_WHITE);
+    riv_snprintf(buf, sizeof(buf), "%d", apples_slashed);
+    riv_draw_text(buf, RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 150, 65, 1, RIV_COLOR_WHITE);
+    int grapes_score = riv_make_image("GRAPES.png", RIV_COLOR_BLACK);
+    riv_draw_image_rect(grapes_score, 90, 90, 32, 32, 0, 0, 1, 1);
+    riv_draw_text("X", RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 130, 105, 1, RIV_COLOR_WHITE);
+    riv_snprintf(buf, sizeof(buf), "%d", grapes_slashed);
+    riv_draw_text(buf, RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 150, 105, 1, RIV_COLOR_WHITE);
+    int bananas_score = riv_make_image("BANANAS.png", RIV_COLOR_BLACK);
+    riv_draw_image_rect(bananas_score, 90, 130, 32, 32, 0, 0, 1, 1);
+    riv_draw_text("X", RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 130, 150, 1, RIV_COLOR_WHITE);
+    riv_snprintf(buf, sizeof(buf), "%d", bananas_slashed);
+    riv_draw_text(buf, RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 150, 150, 1, RIV_COLOR_WHITE);
+
+    // Draw final score
+    riv_draw_text("FINAL SCORE:", RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 128, 175, 1, RIV_COLOR_WHITE);
+    riv_snprintf(buf, sizeof(buf), "%d", score);
+    riv_draw_text(buf, RIV_SPRITESHEET_FONT_5X7, RIV_CENTER, 128, 185, 1, RIV_COLOR_WHITE);
+    if(score <= 0){
+        riv_draw_text("You shouldn't be anywhere near sharp objects!", RIV_SPRITESHEET_FONT_3X5, RIV_CENTER, 128, 200, 1, RIV_COLOR_WHITE);
+    } else if (score > 0 && score <= 1000){
+        riv_draw_text("You need more training! nice try!", RIV_SPRITESHEET_FONT_3X5, RIV_CENTER, 128, 200, 1, RIV_COLOR_WHITE);
+    } else if (score > 1000 && score <= 2000){
+        riv_draw_text("You are a great ninja! good job!", RIV_SPRITESHEET_FONT_3X5, RIV_CENTER, 128, 200, 1, RIV_COLOR_WHITE);
+    } else if (score > 2000) {
+        riv_draw_text("You are a true dragon ninja! run your own dojo!", RIV_SPRITESHEET_FONT_3X5, RIV_CENTER, 128, 200, 1, RIV_COLOR_WHITE);
+    }
 }
 
 void update() {
