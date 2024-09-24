@@ -1,0 +1,13 @@
+{
+  "name": "Real Ninja Challenge",
+  "summary": "Cut, Chop and Slice up as much fruit as you can in a limited amount of time",
+  "description": "Press A or START on your gamepad to begin (Z on PC), then match the directions on-screen with your Dpad, cutting fruit gives you points and a little more time to continue chopping fruit, missing subtracts points",
+  "tags": ["retro", "arcade", "action", "2d", "ninja"],
+  "authors": [
+    {
+      "name": "Aleister Codely",
+      "link": "https://github.com/aleistercodely"
+    }
+  ],
+  "links": ["https://github.com/AleisterCodely/rivemu-real-ninja-challenge"]
+}
