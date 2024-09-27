@@ -267,10 +267,10 @@ void update_game() {
             right_pressed = false;
         }
     }
-    update_score();
+    update_scores();
 }
 
-void update_score() {
+void update_scores() {
     riv->outcard_len = riv_snprintf((char*)riv->outcard, RIV_SIZE_OUTCARD, "JSON{\"score\":%d,\"peaches destroyed\":%d,\"apples sliced\":%d,\"grapes obliterated\":%d,\"bananas unbunched\":%d,\"misses\":%d}", score, peaches_slashed, apples_slashed, grapes_slashed, bananas_slashed, misses);
 }
 
